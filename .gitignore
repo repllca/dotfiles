@@ -1,0 +1,4 @@
+# Neovim
+nvim/.DS_Store
+nvim/.luarc.json
+nvim/**/.git
