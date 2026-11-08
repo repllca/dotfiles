@@ -1,5 +1,5 @@
 {
-  description = "Portable Nix developer environment";
+  description = "Portable developer environment & global CLI packages";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -30,6 +30,5 @@
             age
           ];
         };
-      }
-    );
+      });
 }
