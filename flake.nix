@@ -24,7 +24,7 @@
             bat
             eza
             jq
-
+            awscli2
             # シークレット管理
             sops
             age
