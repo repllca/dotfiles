@@ -1,5 +1,5 @@
 {
-  description = "Portable developer environment & global CLI packages";
+  description = "Reproducible development environment managed via Nix Flakes";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -15,20 +15,27 @@
         packages.default = pkgs.buildEnv {
           name = "global-packages";
           paths = with pkgs; [
-            # エディタ・ツール
+            # Base tools
             neovim
-            helix
-            ripgrep
-            fd
-            fzf
-            bat
-            eza
-            jq
-            awscli2
-            # シークレット管理
+            tmux
             sops
             age
+
+            # Cloud & Infrastructure
+            awscli2
+
+            # Modern CLI tools
+            starship
+            eza
+            bat
+            ripgrep
+            zoxide
+
+            # Dev Environment & Automation
+            devbox
+            direnv
           ];
         };
-      });
+      }
+    );
 }
