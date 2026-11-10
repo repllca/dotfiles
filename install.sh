@@ -84,4 +84,45 @@ if [ -d "$DOTFILES_DIR/aws" ]; then
   fi
 fi
 
+# --------------------------------------------------
+# 5. Zsh 設定の展開 (シンボリックリンク)
+# --------------------------------------------------
+if [ -f "$DOTFILES_DIR/zsh/.zshrc" ]; then
+  echo "==> Configuring Zsh..."
+  link_file "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
+else
+  echo "Notice: $DOTFILES_DIR/zsh/.zshrc not found. Skipping."
+fi
+
+# Antigravity CLI (agy) 設定のシンボリックリンク展開
+setup_antigravity() {
+  local target_dir="$HOME/.config/antigravity"
+  local source_dir="$HOME/dotfiles/config/antigravity"
+
+  echo "==> Setting up Antigravity configuration..."
+  mkdir -p "$target_dir"
+
+  if [ -f "$source_dir/config.yaml" ]; then
+    ln -snf "$source_dir/config.yaml" "$target_dir/config.yaml"
+    echo "Linked: $target_dir/config.yaml -> $source_dir/config.yaml"
+  fi
+
+  if [ -f "$source_dir/mcp.json" ]; then
+    ln -snf "$source_dir/mcp.json" "$target_dir/mcp.json"
+    echo "Linked: $target_dir/mcp.json -> $source_dir/mcp.json"
+  fi
+}
+
+setup_antigravity
+
+# --------------------------------------------------
+# 6. Starship 設定の展開 (シンボリックリンク)
+# --------------------------------------------------
+if [ -f "$DOTFILES_DIR/starship/starship.toml" ]; then
+  echo "==> Configuring Starship prompt..."
+  link_file "$DOTFILES_DIR/starship/starship.toml" "$HOME/.config/starship.toml"
+else
+  echo "Notice: $DOTFILES_DIR/starship/starship.toml not found. Skipping."
+fi
+
 echo "==> Dotfiles setup completed successfully!"

@@ -1,0 +1,61 @@
+# ==========================================
+# Google Antigravity CLI (agy) Universal Config
+# ==========================================
+
+# モデル・推論設定
+model:
+  default: "gemini-2.5-pro"
+  fallback: "gemini-2.5-flash"
+  temperature: 0.2
+  max_output_tokens: 8192
+
+# 実行安全設定・ガードレール
+agent:
+  safe_mode: true
+  max_iterations: 25
+  timeout_seconds: 300
+
+  # 破壊的コマンドの防止 + WSL2ハング要因のブロック
+  blocked_commands:
+    # 破壊的ファイル・Git操作
+    - "rm -rf"
+    - "git push --force"
+    - "git reset --hard"
+    - "git clean"
+    - "mkfs"
+    - "dd"
+    # WSL2 / ホストOS探索によるハング防止
+    - "find /mnt"
+    - "ls /mnt"
+    - "grep /mnt"
+    - "cmd.exe"
+    - "powershell.exe"
+    - "pwsh.exe"
+    - "wslvar"
+    - "wslpath"
+
+  # 読み取り・テスト系の安全なコマンド
+  allowed_commands:
+    - "git status"
+    - "git diff"
+    - "git log"
+    - "ls"
+    - "pnpm test"
+    - "pnpm lint"
+    - "cargo check"
+    - "cargo test"
+
+# エージェントへの行動原則
+system_instruction: |
+  あなたはソフトウェアエンジニアリングを支援する自律エージェントです。
+  以下のルールを厳守してください:
+  1. マウントされたホストOS領域（/mnt/* 等）の走査・再帰探索（find, grep等）はI/O競合やハングを引き起こすため絶対に実行しないでください。
+  2. ホストOS固有のネイティブバイナリの探索や直接呼び出しは行わないでください。
+  3. 調査および編集はすべてカレントリポジトリ配下のコードベースで完結させてください。
+  4. 破壊的なファイル削除やGit履歴改変は行わず、修正内容は最小限かつ可逆な状態に保ってください。
+
+# UI・出力設定
+ui:
+  theme: "auto"
+  syntax_highlight: true
+  streaming: true
