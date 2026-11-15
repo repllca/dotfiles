@@ -1,21 +1,47 @@
-# AGY System Directives & Constraints
+# AGY システム開発指針・厳守事項 (Project Directives)
 
-## 1. Environment & Architecture Rules (STRICT)
-- **Architecture**: linux-aarch64 (Snapdragon X / ARM64).
-  - Do NOT download or execute x86/x86_64 prebuilt binaries.
-  - Reject frameworks that require massive C++ compilation from source without prebuilt ARM64 caches.
-- **Package Management (Nix / Devbox ONLY)**:
-  - Absolutely NO `sudo apt`, `apt-get`, or modifications to the WSL2 host OS.
-  - All runtimes, compilers, and dependencies must be declared in `devbox.json`.
-  - Prefer lightweight, binary-cached tools in nixpkgs.
+あなたは優秀なソフトウェアエンジニアとして自律的に開発を行います。
+**ユーザーへの報告、作業計画、エラー原因の解説、コミットメッセージの提案はすべて簡潔かつ正確な「日本語」で行ってください。**
 
-## 2. Execution & Workflow
-- Use `devbox run -- <command>` for all executions and checks.
-- If additional tools or runtimes are required, add them via `devbox add <package>` or update `devbox.json` directly.
+---
 
-## 3. Autonomous Validation (MANDATORY)
-- Do NOT finish a task on assumptions.
-- You must verify compilation, syntax, and startup:
-  - CLI/Services: Run automated test commands or non-blocking smoke tests.
-  - GUI/Interactive Apps: Ensure instant, clean termination via `Esc` or `Ctrl+Q`.
-- If an error occurs, analyze the logs and self-heal.
+## 1. 環境・アーキテクチャ制約 (STRICT)
+- **ターゲットアーキテクチャ**: `linux-aarch64` (Snapdragon X / ARM64 WSL2)
+  - `x86` / `x86_64` 専用のバイナリダウンロード、スクリプト実行、Dockerイメージ指定は**厳禁**です。
+  - ソースからの大規模な C++ コンパイルを伴う重量級フレームワーク（WebKitGTK や Chromium 依存のビルド等）はメモリ不足（OOM）やビルド破綻の原因になるため採用しないでください。
+- **パッケージ・ランタイム管理 (Nix / Devbox 完全準拠)**:
+  - `sudo apt` / `apt-get` や、WSL2 ホストOS（`/usr` 等）へのグローバルインストールは**一切禁止**します。
+  - すべての言語ランタイム、コンパイラ、ライブラリ、CLIツールは必ず `devbox.json` に宣言し、`devbox add <package>` で導入してください。
+  - `nixpkgs` に ARM64 向けのビルド済みバイナリキャッシュが存在する軽量なツールを優先してください。
+
+---
+
+## 2. 実行・ワークフロー規律
+- **Devbox 経由の実行**:
+  - コマンドの実行、ビルド、テスト、リンターは原則として `devbox run -- <command>` を通じて実行してください。
+  - ホスト側のグローバル環境に偶然入っているバイナリに頼らず、`devbox.json` だけで別の ARM64 環境でも再現できる状態を保ってください。
+- **統一インターフェース（Makefile の活用）**:
+  - プロジェクト内に `Makefile` が存在する場合、または複数コマンドの組み合わせが必要な場合は、`make check`（静的解析・構文チェック）、`make test`（自動テスト）、`make build`（ビルド）を定義・利用してください。
+- **段階的実装（スモールステップ）**:
+  - 一度に大量のファイルを書き換えず、1機能ごとに「実装 → 検証 → 確認」のサイクルを小さく回してください。
+
+---
+
+## 3. 自律検証と自己修復 (MANDATORY)
+- **推測での完了報告禁止**:
+  - コードを書いただけで「完了」とせず、必ず実際にコンパイル・構文チェック・起動テストを実行して動作を証明してください。
+- **種別ごとの必須検証基準**:
+  - **CLI / バックエンド / API**: 自動テストの実行、または非ブロッキングのスモークテスト（起動確認・ヘルスチェック後に即終了）を行い、終了コード `0` を確認してください。
+  - **GUI / TUI / インタラクティブアプリ**: 起動確認に加え、`Esc` または `Ctrl+Q` 等でハングせず即座にクリーン終了できることを検証してください。
+  - **データ永続化**: ファイル書き込みを行う処理は、一時ファイル経由のアトミックな保存や異常系（ファイル不在・破損時）のハンドリングを確認してください。
+- **自己修復ループ**:
+  - エラーやテスト失敗が発生した場合は、そのまま停止せずログを分析して原因を特定し、修正と再検証を自律的に行ってください（同じアプローチで3回連続失敗した場合は、無理に進めず根本原因と代替案を日本語で報告してください）。
+
+---
+
+## 4. プロジェクト固有仕様 (Project Context)
+- **概要**: （ここにプロジェクトの目的・概要を記載）
+- **主要技術スタック**: （例：Python / FastAPI / Go / Rust 等）
+- **ディレクトリ構成**:
+  - `src/` : ソースコード
+  - `tests/` : テストコード

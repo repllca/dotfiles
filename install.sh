@@ -94,29 +94,26 @@ else
   echo "Notice: $DOTFILES_DIR/zsh/.zshrc not found. Skipping."
 fi
 
-# Antigravity CLI (agy) 設定のシンボリックリンク展開
-setup_antigravity() {
-  local target_dir="$HOME/.config/antigravity"
-  local source_dir="$HOME/dotfiles/config/antigravity"
+# --------------------------------------------------
+# 6. Antigravity CLI (agy) 設定の展開
+# --------------------------------------------------
+if [ -d "$DOTFILES_DIR/config/antigravity" ]; then
+  echo "==> Configuring Antigravity CLI..."
+  mkdir -p "$HOME/.config/antigravity"
 
-  echo "==> Setting up Antigravity configuration..."
-  mkdir -p "$target_dir"
-
-  if [ -f "$source_dir/config.yaml" ]; then
-    ln -snf "$source_dir/config.yaml" "$target_dir/config.yaml"
-    echo "Linked: $target_dir/config.yaml -> $source_dir/config.yaml"
+  if [ -f "$DOTFILES_DIR/config/antigravity/config.yaml" ]; then
+    link_file "$DOTFILES_DIR/config/antigravity/config.yaml" "$HOME/.config/antigravity/config.yaml"
   fi
 
-  if [ -f "$source_dir/mcp.json" ]; then
-    ln -snf "$source_dir/mcp.json" "$target_dir/mcp.json"
-    echo "Linked: $target_dir/mcp.json -> $source_dir/mcp.json"
+  if [ -f "$DOTFILES_DIR/config/antigravity/mcp.json" ]; then
+    link_file "$DOTFILES_DIR/config/antigravity/mcp.json" "$HOME/.config/antigravity/mcp.json"
   fi
-}
-
-setup_antigravity
+else
+  echo "Notice: $DOTFILES_DIR/config/antigravity not found. Skipping."
+fi
 
 # --------------------------------------------------
-# 6. Starship 設定の展開 (シンボリックリンク)
+# 7. Starship 設定の展開 (シンボリックリンク)
 # --------------------------------------------------
 if [ -f "$DOTFILES_DIR/starship/starship.toml" ]; then
   echo "==> Configuring Starship prompt..."
