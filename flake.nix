@@ -4,12 +4,19 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    # Google Antigravity CLI の Flake を入力に追加
+    antigravity-cli.url = "github:xsen/antigravity-cli-nix";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils, antigravity-cli }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs { inherit system; };
+        pkgs = import nixpkgs {
+          inherit system;
+          config = {
+            allowUnfree = true; # Antigravity CLI 等のプロプライエタリ対応
+          };
+        };
       in
       {
         packages.default = pkgs.buildEnv {
@@ -34,6 +41,9 @@
             # Dev Environment & Automation
             devbox
             direnv
+
+            # Google Antigravity CLI (agy)
+            antigravity-cli.packages.${system}.default
           ];
         };
       }

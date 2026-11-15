@@ -1,5 +1,23 @@
 {
   "nodes": {
+    "antigravity-cli": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1794111232,
+        "narHash": "sha256-kk0kXZqhP1+ae53zj+BDN/btMh/p0Tki46VKEVT3va4=",
+        "owner": "xsen",
+        "repo": "antigravity-cli-nix",
+        "rev": "7871971ecb09991e88c36e76aab0f2b6f99eb2f0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "xsen",
+        "repo": "antigravity-cli-nix",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -20,6 +38,22 @@
     },
     "nixpkgs": {
       "locked": {
+        "lastModified": 1779560665,
+        "narHash": "sha256-tpyBcxPpcQb8ukyNF7DoCwfSY3VPsxHoYwj00Cayv5o=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "64c08a7ca051951c8eae34e3e3cb1e202fe36786",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
         "lastModified": 1793876309,
         "narHash": "sha256-Wojg9lIH/hDH91iDVH2/EPw8oDSpxjxhXONbU1yf4Zg=",
         "owner": "nixos",
@@ -36,8 +70,9 @@
     },
     "root": {
       "inputs": {
+        "antigravity-cli": "antigravity-cli",
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs_2"
       }
     },
     "systems": {
